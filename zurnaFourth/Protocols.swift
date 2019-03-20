@@ -2,10 +2,11 @@
 //  Protocols.swift
 //  zurnaFourth
 //
-//  Created by Yavuz on 15.03.2019.
+//  Created by Yavuz on 18.03.2019.
 //  Copyright © 2019 Yavuz. All rights reserved.
 //
 
-protocol PostsControllerDelegate {
-    func handleMenuToggle(forMenuOption menuOption: MenuOption?)
+protocol PostControllerDelegate {
+    func getPost(post: String)
 }
+

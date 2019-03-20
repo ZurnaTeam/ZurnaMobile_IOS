@@ -13,20 +13,20 @@ class MenuOptionCell: UITableViewCell {
     //MARK: - Properties
     let descriptionLabel: UILabel = {
         let label = UILabel()
+        label.backgroundColor = .white
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 16)
         label.text = "#sampleText"
         return label
     }()
     
-    
     //MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        backgroundColor = .darkGray
+        backgroundColor = .red
         
         addSubview(descriptionLabel)
+        
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         descriptionLabel.leftAnchor.constraint(equalTo: leftAnchor,constant: 12).isActive = true

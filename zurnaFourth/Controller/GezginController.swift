@@ -62,7 +62,7 @@ class GezginController: UICollectionViewController{
     }
     
     fileprivate func setupCollectionView() {
-        self.collectionView.backgroundColor = .yellow
+        self.collectionView.backgroundColor = .white
         self.collectionView.contentInsetAdjustmentBehavior = .always
         
         
@@ -91,7 +91,7 @@ class GezginController: UICollectionViewController{
         cell.countryLabel.text = countries[indexPath.item]
 
 //        cell.backgroundColor = .red
-        cell.backgroundColor = indexPath.row % 2 == 0 ? UIColor.lightGray: UIColor.gray
+        cell.backgroundColor = indexPath.row % 2 == 0 ? UIColor(red:0.94, green:0.78, blue:0.76, alpha:1.0): UIColor(red:1.00, green:0.90, blue:0.83, alpha:1.0)
 //        cell.frame.origin.x = self.view.frame.width - cell.frame.width
         
         return cell
@@ -99,6 +99,14 @@ class GezginController: UICollectionViewController{
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return .init(width: 100, height: 50)
+    }
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! GezginViewCell
+        if let country = cell.countryLabel.text?.split(separator: " "){
+            print(country[1])
+
+            //            navigationController?.popToViewController(CommentController(collectionViewLayout: UICollectionViewLayout()), animated: true)
+        }
     }
 
 }

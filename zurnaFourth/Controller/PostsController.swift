@@ -9,7 +9,14 @@
 import UIKit
 import CoreLocation
 
-class PostsController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate, commentControllerProtocol {
+public var sendedPost = "Sample Text"
+
+class PostsController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate {
+    
+    let urlPost = URL(string: "https://jsonplaceholder.typicode.com/posts")
+    let session = URLSession.shared
+    
+    var posts: [String]? = [String]()
     
     fileprivate let cellId = "cellId"
     fileprivate let headerId = "headerId"
@@ -22,8 +29,9 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
     var hashImageConstraitX: NSLayoutConstraint?
     var hashMenuBarConstrait: NSLayoutConstraint?
     var menuControllerView : UIView = {
+//        var view1 = UIView()
         var view = MenuController().view
-        MenuController().viewDidLoad()
+//        MenuController().viewDidLoad()
         return view!
     }()
     
@@ -51,6 +59,36 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         fatalError("init(coder:) has not been implemented")
     }
     
+    fileprivate func getPostsFromAPI() {
+        let task = self.session.dataTask(with: self.urlPost!) { (data, response, error) in
+            
+            if error != nil {
+                let alert = UIAlertController(title: "Error", message: error.debugDescription, preferredStyle: UIAlertController.Style.alert)
+                let okBtn = UIAlertAction(title: "Ok", style: UIAlertAction.Style.cancel, handler: nil)
+                alert.addAction(okBtn)
+                self.present(alert, animated: true, completion: nil)
+            }else{
+                if data != nil{
+                    do{
+                        let jsonResult = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! Array<Dictionary<String,AnyObject>>
+                        
+                        DispatchQueue.main.async {
+                            //print(jsonResult)
+                            for i in 0..<jsonResult.count{
+                                self.posts?.append(jsonResult[i]["body"]! as! String)
+                            }
+                            self.collectionView.reloadData()
+                        }
+                    }catch{
+                        
+                    }
+                    
+                }
+            }
+        }
+        task.resume()
+    }
+    
     override func viewDidLoad() {
         setupCollectionViewLayout()
         setupCollectionView()
@@ -62,7 +100,8 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
        
         hashImage.addGestureRecognizer(hashMenuOpen)
         hashImage.addGestureRecognizer(hashMenuClose)
-
+        
+        getPostsFromAPI()
     }
     
     @objc func toggleMenuBar(sender: UISwipeGestureRecognizer){
@@ -94,9 +133,9 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         menuControllerView.layer.shadowRadius = 5
         view.addConstraintsWithFormat(format: "H:|[v0(150)]", views: menuControllerView)
         view.addConstraintsWithFormat(format: "V:|[v0]|", views: menuControllerView)
-        hashMenuBarConstrait = NSLayoutConstraint(item: menuControllerView, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: -155)//SıkıntılıLayout
+        hashMenuBarConstrait = NSLayoutConstraint(item: menuControllerView, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: -155)//SıkıntılıLayout constanti 0 yapmak lazim ancak o zamanda ekranda surekli kaliyor
         view.addConstraint(hashMenuBarConstrait!)
-        
+
         
     }
     fileprivate func setupLocation() {
@@ -124,11 +163,10 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
             }
         }
     }
+    
+    //Post kismindaki klavye kapatilacak
     //MARK Hashtagler gelecek
-    //MARK Postlar gelecek
-    //MARK Commentler gelecek
     //MARK Internet var mi kontrolu yapilacak
-    //MARK Comment kisminda az comment varken klavye ciktigi vakit bug oluyor
     //MARK Setting eklenebilir
     //MARK 1.Filtreleme olacak
     //MARK 1.1 Gezgin filtresi olacak secilen sehrin postlari gelecek
@@ -159,7 +197,9 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
     }
     
     fileprivate func setupCollectionView() {
-        collectionView.backgroundColor = .yellow
+//        collectionView.backgroundColor = UIColor(red:0.94, green:0.78, blue:0.76, alpha:1.0)
+//        collectionView.backgroundColor = UIColor(red:1.00, green:0.90, blue:0.83, alpha:1.0)
+        collectionView.backgroundColor = .white
         collectionView.contentInsetAdjustmentBehavior = .always
         
         collectionView.register(PostsViewCell.self, forCellWithReuseIdentifier: cellId)
@@ -177,35 +217,56 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 18
+        if let count = posts?.count{
+            return count
+        }
+        return 0
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! PostsViewCell
         
-        cell.backgroundColor = .black
-        cell.frame.origin.x = indexPath.row % 2 == 0 ?  0 : self.view.frame.width - cell.frame.width
-        cell.postTextField.text = "deneme"
-        cell.postTextField.textColor = .white
-
+//        cell.backgroundColor = .black
+        cell.frame.origin.x = indexPath.row % 2 == 0 ?  0 : 2 * 16
+        if let postContent = posts?[indexPath.item]{
+            cell.postTextView.text = postContent
+//            cell.postTextField.textColor = .white
+            let size = CGSize(width: 250, height: 1000)
+            let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+            let estimatedFrame = NSString(string: postContent).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], context: nil)
+            
+            cell.postTextView.frame = CGRect(x: 8, y: 0, width: cell.frame.width, height: estimatedFrame.height + 20)
+            
+            cell.textBubbleView.frame = CGRect(x: 0, y: 0, width: cell.frame.width, height: estimatedFrame.height + 20)
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return .init(width: view.frame.width - 2 * padding, height: 50)
+        
+        if let messageText = posts?[indexPath.item]{
+            let size = CGSize(width: 250, height: 1000)
+            let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+            let estimatedFrame = NSString(string: messageText).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], context: nil)
+            
+            return CGSize(width: view.frame.width - 2 * padding , height: estimatedFrame.height + 20)
+            
+        }
+        
+        return CGSize(width: view.frame.width - 2 * padding, height: 50)
+        
+//        return .init(width: view.frame.width - 2 * padding, height: 50)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! PostsViewCell
+        self.view.endEditing(true)
         
-            navigationController?.pushViewController(CommentController(collectionViewLayout: UICollectionViewFlowLayout()), animated: true)
+        sendedPost = cell.postTextView.text!
+        
+        navigationController?.pushViewController(CommentController(collectionViewLayout: UICollectionViewFlowLayout()), animated: true)
     }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let segu:CommentController = segue.destination as? CommentController {
-            segu.delegate = self
-        }
-    }
-    
-    func getPost() -> String {
-        return "deneme"
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.view.endEditing(true)
     }
 }

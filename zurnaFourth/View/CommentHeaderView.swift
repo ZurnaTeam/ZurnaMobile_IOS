@@ -19,7 +19,8 @@ class CommentHeaderView: UICollectionReusableView {
         textView.layer.cornerRadius = 15
         textView.layer.masksToBounds = true
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.isUserInteractionEnabled = false
+        textView.isUserInteractionEnabled = true
+        textView.isEditable = false
         
         return textView
     }()

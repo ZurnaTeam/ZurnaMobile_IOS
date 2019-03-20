@@ -13,6 +13,8 @@
 		D7280DFA2239942400E4D66E /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7280DF92239942400E4D66E /* CustomTabBarController.swift */; };
 		D7280DFC2239966E00E4D66E /* GezginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7280DFB2239966E00E4D66E /* GezginController.swift */; };
 		D72F4771223F759E00AD176F /* CommentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72F4770223F759E00AD176F /* CommentHeaderView.swift */; };
+		D72F4773223FDA7C00AD176F /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72F4772223FDA7C00AD176F /* Protocols.swift */; };
+		D72F4775223FDD9500AD176F /* CommentViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72F4774223FDD9500AD176F /* CommentViewCell.swift */; };
 		D7C237FC2238F2370022E4A0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C237FB2238F2370022E4A0 /* AppDelegate.swift */; };
 		D7C237FE2238F2370022E4A0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C237FD2238F2370022E4A0 /* ViewController.swift */; };
 		D7C238012238F2370022E4A0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7C237FF2238F2370022E4A0 /* Main.storyboard */; };
@@ -35,6 +37,8 @@
 		D7280DF92239942400E4D66E /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		D7280DFB2239966E00E4D66E /* GezginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GezginController.swift; sourceTree = "<group>"; };
 		D72F4770223F759E00AD176F /* CommentHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentHeaderView.swift; sourceTree = "<group>"; };
+		D72F4772223FDA7C00AD176F /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		D72F4774223FDD9500AD176F /* CommentViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewCell.swift; sourceTree = "<group>"; };
 		D7C237F82238F2370022E4A0 /* zurnaFourth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = zurnaFourth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7C237FB2238F2370022E4A0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D7C237FD2238F2370022E4A0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -81,6 +85,7 @@
 				D7C9B87E223A66B40029DCE7 /* PostsViewCell.swift */,
 				D718FAD0223B8EFD005155D0 /* MenuOptionCell.swift */,
 				D72F4770223F759E00AD176F /* CommentHeaderView.swift */,
+				D72F4774223FDD9500AD176F /* CommentViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -126,6 +131,7 @@
 				D7C238042238F2380022E4A0 /* LaunchScreen.storyboard */,
 				D7C238072238F2380022E4A0 /* Info.plist */,
 				D7C2381122391B7D0022E4A0 /* ExtensionForUIView.swift */,
+				D72F4772223FDA7C00AD176F /* Protocols.swift */,
 			);
 			path = zurnaFourth;
 			sourceTree = "<group>";
@@ -207,6 +213,7 @@
 				D7C9B87D223A460A0029DCE7 /* BaseCell.swift in Sources */,
 				D7280DFA2239942400E4D66E /* CustomTabBarController.swift in Sources */,
 				D7C9B877223A335A0029DCE7 /* Countries.swift in Sources */,
+				D72F4775223FDD9500AD176F /* CommentViewCell.swift in Sources */,
 				D7C9B87F223A66B40029DCE7 /* PostsViewCell.swift in Sources */,
 				D7C237FC2238F2370022E4A0 /* AppDelegate.swift in Sources */,
 				D7C238102238F6BC0022E4A0 /* HeaderView.swift in Sources */,
@@ -216,6 +223,7 @@
 				D7C2381222391B7D0022E4A0 /* ExtensionForUIView.swift in Sources */,
 				D718FAD1223B8EFD005155D0 /* MenuOptionCell.swift in Sources */,
 				D7C9B879223A3AD90029DCE7 /* GezginViewCell.swift in Sources */,
+				D72F4773223FDA7C00AD176F /* Protocols.swift in Sources */,
 				D7280DFC2239966E00E4D66E /* GezginController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,8 +371,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = G765J28CP4;
 				INFOPLIST_FILE = zurnaFourth/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -381,8 +390,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = G765J28CP4;
 				INFOPLIST_FILE = zurnaFourth/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -26,7 +26,8 @@ class HeaderView: UICollectionReusableView {
     let sendButton: UIButton = {
         let button = UIButton()
         
-        button.backgroundColor = .yellow
+//        button.backgroundColor = UIColor(red:0.94, green:0.78, blue:0.76, alpha:1.0)
+        button.backgroundColor = UIColor(white: 0.95, alpha: 1)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "gonderBtn"), for: UIControl.State.normal)
         return button
@@ -34,7 +35,8 @@ class HeaderView: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame:frame)
-        backgroundColor = .yellow
+//        backgroundColor = UIColor(red:0.94, green:0.78, blue:0.76, alpha:1.0)
+        backgroundColor = UIColor(white: 0.95, alpha: 1)
         
         addSubview(postTextView)
         addSubview(sendButton)
