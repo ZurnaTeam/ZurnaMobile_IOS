@@ -164,6 +164,9 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         }
     }
     
+    //Gonder butonu calisacak
+    //Up-Down butonu calisacak
+    //Yorum gonder butonu calisacak
     //Post kismindaki klavye kapatilacak
     //MARK Hashtagler gelecek
     //MARK Internet var mi kontrolu yapilacak
