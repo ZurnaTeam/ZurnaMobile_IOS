@@ -30,6 +30,7 @@ class HeaderView: UICollectionReusableView {
         button.backgroundColor = UIColor(white: 0.95, alpha: 1)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "gonderBtn"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         return button
     }()
     
@@ -52,5 +53,15 @@ class HeaderView: UICollectionReusableView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    @objc func buttonAction(sender: UIButton!) {
+        //Gonder butonu islemleri
+        if !postTextView.text.isEmpty {
+            if let post = postTextView.text{
+                print(post)
+            }
+        }
+        
+    }
+    
 }
 

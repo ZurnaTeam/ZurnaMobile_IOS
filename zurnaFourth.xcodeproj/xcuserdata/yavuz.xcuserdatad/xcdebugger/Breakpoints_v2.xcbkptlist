@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "zurnaFourth/Controller/PostsController.swift"
-            timestampString = "574841687.321262"
+            timestampString = "574871867.253511"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
             landmarkName = "setupHashMenu()"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "zurnaFourth/Controller/PostsController.swift"
-            timestampString = "574841687.321854"
+            timestampString = "574871867.2537431"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
             landmarkName = "setupHashMenu()"
             landmarkType = "7">
          </BreakpointContent>
@@ -58,13 +58,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "zurnaFourth/Controller/PostsController.swift"
-            timestampString = "574841687.322232"
+            timestampString = "574871867.2539279"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
-            landmarkName = "collectionView(_:numberOfItemsInSection:)"
-            landmarkType = "7">
+            startingLineNumber = "227"
+            endingLineNumber = "227"
+            landmarkName = "PostsController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -73,14 +73,61 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "zurnaFourth/Controller/PostsController.swift"
-            timestampString = "574841687.32261"
+            filePath = "zurnaFourth/Controller/CommentController.swift"
+            timestampString = "574929705.971139"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
-            landmarkName = "getPostsFromAPI()"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
+            landmarkName = "getCommentsFromAPI()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in zurnaFourth.CommentController.(getCommentsFromAPI in _D0AE97FBEAAAAD6C18F4194AE7F6DDCD)() -&gt; ()"
+                  moduleName = "zurnaFourth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yavuz/Desktop/Desktop/Yaz%C4%B1l%C4%B1m/Swift/zurnaFourth/zurnaFourth/Controller/CommentController.swift"
+                  timestampString = "574871245.024073"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "121"
+                  endingLineNumber = "121"
+                  offsetFromSymbolStart = "2008">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in zurnaFourth.CommentController.(getCommentsFromAPI in _D0AE97FBEAAAAD6C18F4194AE7F6DDCD)() -&gt; ()"
+                  moduleName = "zurnaFourth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yavuz/Desktop/Desktop/Yaz%C4%B1l%C4%B1m/Swift/zurnaFourth/zurnaFourth/Controller/CommentController.swift"
+                  timestampString = "574871245.027488"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "121"
+                  endingLineNumber = "121"
+                  offsetFromSymbolStart = "2170">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in zurnaFourth.CommentController.(getCommentsFromAPI in _D0AE97FBEAAAAD6C18F4194AE7F6DDCD)() -&gt; ()"
+                  moduleName = "zurnaFourth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yavuz/Desktop/Desktop/Yaz%C4%B1l%C4%B1m/Swift/zurnaFourth/zurnaFourth/Controller/CommentController.swift"
+                  timestampString = "574871245.030152"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "121"
+                  endingLineNumber = "121"
+                  offsetFromSymbolStart = "2201">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

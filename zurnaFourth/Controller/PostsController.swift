@@ -10,12 +10,15 @@ import UIKit
 import CoreLocation
 
 public var sendedPost = "Sample Text"
+public var sendedIndexPath: Int = -1
 
 class PostsController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate {
     
-    let urlPost = URL(string: "https://jsonplaceholder.typicode.com/posts")
-    let session = URLSession.shared
+    //Structures
     
+    
+    //Properties
+
     var posts: [String]? = [String]()
     
     fileprivate let cellId = "cellId"
@@ -60,7 +63,10 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
     }
     
     fileprivate func getPostsFromAPI() {
-        let task = self.session.dataTask(with: self.urlPost!) { (data, response, error) in
+        let urlPost = URL(string: "http://77.223.142.42/plesk-site-preview/azorlua.com/api/posts")
+        let session = URLSession.shared
+        
+        let task = session.dataTask(with: urlPost!) { (data, response, error) in
             
             if error != nil {
                 let alert = UIAlertController(title: "Error", message: error.debugDescription, preferredStyle: UIAlertController.Style.alert)
@@ -70,12 +76,12 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
             }else{
                 if data != nil{
                     do{
-                        let jsonResult = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! Array<Dictionary<String,AnyObject>>
-                        
+
+                        let jsonResult = try JSONDecoder().decode([Post].self, from: data!)
                         DispatchQueue.main.async {
                             //print(jsonResult)
                             for i in 0..<jsonResult.count{
-                                self.posts?.append(jsonResult[i]["body"]! as! String)
+                                self.posts?.append((jsonResult[i].content?.text)!)
                             }
                             self.collectionView.reloadData()
                         }
@@ -163,7 +169,7 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
             }
         }
     }
-    
+    //Gonderenin adi yazilacak
     //Gonder butonu calisacak
     //Up-Down butonu calisacak
     //Yorum gonder butonu calisacak
@@ -266,6 +272,7 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         self.view.endEditing(true)
         
         sendedPost = cell.postTextView.text!
+        sendedIndexPath = indexPath.item
         
         navigationController?.pushViewController(CommentController(collectionViewLayout: UICollectionViewFlowLayout()), animated: true)
     }

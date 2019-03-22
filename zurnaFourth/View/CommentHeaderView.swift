@@ -34,6 +34,7 @@ class CommentHeaderView: UICollectionReusableView {
         button.backgroundColor = .blue
         button.setTitle("Up", for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 10)
+        button.addTarget(self, action: #selector(upButtonAction), for: .touchUpInside)
         return button
     }()
     let downButton: UIButton = {
@@ -41,6 +42,7 @@ class CommentHeaderView: UICollectionReusableView {
         button.backgroundColor = .red
         button.setTitle("Down", for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 10)
+        button.addTarget(self, action: #selector(downButtonAction), for: .touchUpInside)
         return button
     }()
     let upLabel: UILabel = {
@@ -83,6 +85,14 @@ class CommentHeaderView: UICollectionReusableView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    @objc func upButtonAction(sender: UIButton!) {
+        //Up butonu islemleri
+        print("up")
+    }
+    @objc func downButtonAction(sender: UIButton!) {
+        //Down butonu islemleri
+        print("down")
     }
 }
 

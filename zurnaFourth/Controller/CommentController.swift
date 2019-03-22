@@ -9,11 +9,11 @@
 import UIKit
 
 class CommentController: UICollectionViewController, UICollectionViewDelegateFlowLayout{
-    
-    let urlPost = URL(string: "https://jsonplaceholder.typicode.com/posts/1")
-    let session = URLSession.shared
-    
+ 
     private var camePost = sendedPost
+    private var cameIndexPath: Int = sendedIndexPath
+    
+    private var postObject: [Post]?
     
     fileprivate let cellId = "cellId"
     fileprivate let headerId = "headerId"
@@ -40,15 +40,15 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
         button.backgroundColor = .blue
         button.setTitle("Send", for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.addTarget(self, action: #selector(commentSendButtonAction), for: .touchUpInside)
         return button
     }()
     
     var bottomConstraint: NSLayoutConstraint?
     
-   
-    
     override func viewDidLoad() {
-        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tap)
         setupCollectionViewLayout()
         
         setupCollectionView()
@@ -68,8 +68,33 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
         getCommentsFromAPI()
     }
     
+    @objc func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
+    }
+    
+    @objc func commentSendButtonAction(sender: UIButton!) {
+        //Comment send butonu islemleri
+        print("sendComment")
+        
+        print(postObject)
+        let dateDeneme = Date()
+        print(dateDeneme)
+        if !commentTextView.text.isEmpty{
+            if let comment = commentTextView.text{
+                print(comment)
+                let commentLast = postObject![cameIndexPath].comments?.count
+                //MARK burada comment yollanacak
+            }
+        }
+    }
+    
     fileprivate func getCommentsFromAPI() {
-        let task = self.session.dataTask(with: self.urlPost!) { (data, response, error) in
+//        let denemeST = Post()  //alternatif cozum structuredan cekme
+        let index = cameIndexPath
+        let urlPost = URL(string: "http://77.223.142.42/plesk-site-preview/azorlua.com/api/posts")
+        let session = URLSession.shared
+        let task = session.dataTask(with: urlPost!) { (data, response, error) in
             
             if error != nil {
                 let alert = UIAlertController(title: "Error", message: error.debugDescription, preferredStyle: UIAlertController.Style.alert)
@@ -79,12 +104,22 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
             }else{
                 if data != nil{
                     do{
-                        let jsonResult = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! Dictionary<String,AnyObject>
-                        
+                        let jsonResult = try JSONDecoder().decode([Post].self, from: data!)
+//                        self.postObject =  JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! Post
                         DispatchQueue.main.async {
+                        self.postObject = jsonResult
+                            
+                            
                             //print(jsonResult)
-                            for i in 0..<jsonResult.count{
-                                self.comments?.append(jsonResult["title"]! as! String)
+//                            if let saDene = denemeST.comments?.count{
+//                                for i in 0 ..< saDene{
+//                                    self.comments?.append(denemeST.comments![i].text!)
+//                                }
+//                            }
+                            if let commentCount = jsonResult[index].comments?.count{
+                                for i in 0 ..< commentCount{
+                                    self.comments?.append((jsonResult[index].comments![i].text)!)
+                                }
                             }
                             self.collectionView.reloadData()
                         }
@@ -184,10 +219,7 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return .init(width: view.frame.width - 2 * padding, height: 50)
     }
-    
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        commentTextView.endEditing(true)
-    }
+
     override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.view.endEditing(true)
     }
