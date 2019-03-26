@@ -12,8 +12,11 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
  
     private var camePost = sendedPost
     private var cameIndexPath: Int = sendedIndexPath
+    private var camePostId: String = postId
+    private var post: [Post] = [Post]()
+    var upLabel = 0
+    var downLabel = 0
     
-    private var postObject: [Post]?
     
     fileprivate let cellId = "cellId"
     fileprivate let headerId = "headerId"
@@ -77,60 +80,31 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
         //Comment send butonu islemleri
         print("sendComment")
         
-        print(postObject)
-        let dateDeneme = Date()
-        print(dateDeneme)
         if !commentTextView.text.isEmpty{
             if let comment = commentTextView.text{
                 print(comment)
-                let commentLast = postObject![cameIndexPath].comments?.count
+                Post.commentDownloadNPost(text: comment, id: camePostId, comment: true, rate: false)
                 //MARK burada comment yollanacak
             }
         }
     }
     
     fileprivate func getCommentsFromAPI() {
-//        let denemeST = Post()  //alternatif cozum structuredan cekme
         let index = cameIndexPath
-        let urlPost = URL(string: "http://77.223.142.42/plesk-site-preview/azorlua.com/api/posts")
-        let session = URLSession.shared
-        let task = session.dataTask(with: urlPost!) { (data, response, error) in
-            
-            if error != nil {
-                let alert = UIAlertController(title: "Error", message: error.debugDescription, preferredStyle: UIAlertController.Style.alert)
-                let okBtn = UIAlertAction(title: "Ok", style: UIAlertAction.Style.cancel, handler: nil)
-                alert.addAction(okBtn)
-                self.present(alert, animated: true, completion: nil)
-            }else{
-                if data != nil{
-                    do{
-                        let jsonResult = try JSONDecoder().decode([Post].self, from: data!)
-//                        self.postObject =  JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! Post
-                        DispatchQueue.main.async {
-                        self.postObject = jsonResult
-                            
-                            
-                            //print(jsonResult)
-//                            if let saDene = denemeST.comments?.count{
-//                                for i in 0 ..< saDene{
-//                                    self.comments?.append(denemeST.comments![i].text!)
-//                                }
-//                            }
-                            if let commentCount = jsonResult[index].comments?.count{
-                                for i in 0 ..< commentCount{
-                                    self.comments?.append((jsonResult[index].comments![i].text)!)
-                                }
-                            }
-                            self.collectionView.reloadData()
+        Post.downloadStruct { (results:[Post]) in
+            DispatchQueue.main.async {
+                if let count = results[index].comments?.count{
+                    for i in 0 ..< count{
+                        if let text = results[index].comments![i].text{
+                            self.comments?.append(text)
                         }
-                    }catch{
-                        
                     }
-                    
+                    self.upLabel = (results[index].content?.like)!
+                    self.downLabel = (results[index].content?.dislike)!
                 }
+                self.collectionView.reloadData()
             }
         }
-        task.resume()
     }
     
     @objc func handleKeyboard(notification: NSNotification){
@@ -188,6 +162,9 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath) as! CommentHeaderView
         header.postTextView.text = camePost
+        header.upLabel.text = upLabel.description
+        header.downLabel.text = downLabel.description
+        
         return header
     }
     

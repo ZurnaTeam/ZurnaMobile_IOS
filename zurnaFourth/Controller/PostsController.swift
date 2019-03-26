@@ -11,6 +11,7 @@ import CoreLocation
 
 public var sendedPost = "Sample Text"
 public var sendedIndexPath: Int = -1
+public var postId = ""
 
 class PostsController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate {
     
@@ -20,6 +21,7 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
     //Properties
 
     var posts: [String]? = [String]()
+    var postsIds: [String]? = [String]()
     
     fileprivate let cellId = "cellId"
     fileprivate let headerId = "headerId"
@@ -63,36 +65,18 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
     }
     
     fileprivate func getPostsFromAPI() {
-        let urlPost = URL(string: "http://77.223.142.42/plesk-site-preview/azorlua.com/api/posts")
-        let session = URLSession.shared
-        
-        let task = session.dataTask(with: urlPost!) { (data, response, error) in
-            
-            if error != nil {
-                let alert = UIAlertController(title: "Error", message: error.debugDescription, preferredStyle: UIAlertController.Style.alert)
-                let okBtn = UIAlertAction(title: "Ok", style: UIAlertAction.Style.cancel, handler: nil)
-                alert.addAction(okBtn)
-                self.present(alert, animated: true, completion: nil)
-            }else{
-                if data != nil{
-                    do{
-
-                        let jsonResult = try JSONDecoder().decode([Post].self, from: data!)
-                        DispatchQueue.main.async {
-                            //print(jsonResult)
-                            for i in 0..<jsonResult.count{
-                                self.posts?.append((jsonResult[i].content?.text)!)
-                            }
-                            self.collectionView.reloadData()
-                        }
-                    }catch{
-                        
+        Post.downloadStruct { (results:[Post]) in
+            DispatchQueue.main.async {
+                for result in results{
+                    if let text = result.content?.text{
+                        self.posts?.append(text)
+                        self.postsIds?.append(result.id!)
                     }
-                    
+                    self.collectionView.reloadData()
                 }
             }
         }
-        task.resume()
+       
     }
     
     override func viewDidLoad() {
@@ -169,7 +153,7 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
             }
         }
     }
-    //Gonderenin adi yazilacak
+    //Guncelleme olacak
     //Gonder butonu calisacak
     //Up-Down butonu calisacak
     //Yorum gonder butonu calisacak
@@ -182,7 +166,7 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
     //MARK 1.2 Hashtag filtresi olacak secilen hashtag postlari gelecek
     
 //    MARK Hata olmayan uyarilar giderilecek
-    func openMenu(){
+        func openMenu(){
         self.hashMenuBarConstrait?.constant = 0
         self.hashImageConstraitX?.constant = 150
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
@@ -273,6 +257,7 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         
         sendedPost = cell.postTextView.text!
         sendedIndexPath = indexPath.item
+        postId = postsIds![indexPath.item]
         
         navigationController?.pushViewController(CommentController(collectionViewLayout: UICollectionViewFlowLayout()), animated: true)
     }

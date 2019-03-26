@@ -16,12 +16,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        let register = UserDefaults.standard.bool(forKey: "didYouRegister")
+        if !register{
+            didYouRegisterBefore()
+        }
+        
         window = UIWindow()
 
 //        window?.rootViewController = PostsController(collectionViewLayout: UICollectionViewFlowLayout())
         window?.rootViewController = CustomTabBarController()
         
         return true
+    }
+    func didYouRegisterBefore() {
+        let deviceId = UIDevice.current.identifierForVendor?.uuidString
+        Users.userRegister(device: deviceId!)
+        UserDefaults.standard.set(true, forKey: "didYouRegister")
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

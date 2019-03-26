@@ -89,10 +89,12 @@ class CommentHeaderView: UICollectionReusableView {
     @objc func upButtonAction(sender: UIButton!) {
         //Up butonu islemleri
         print("up")
+        Post.commentDownloadNPost(text: "", id: postId, comment: false, rate: true)
     }
     @objc func downButtonAction(sender: UIButton!) {
         //Down butonu islemleri
         print("down")
+        Post.commentDownloadNPost(text: "", id: postId, comment: false, rate: false)
     }
 }
 
