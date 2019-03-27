@@ -9,19 +9,32 @@
 import UIKit
 import CoreLocation
 
+
+
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate{
+class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate{
 
     var window: UIWindow?
+    var locationManager = CLLocationManager()
+    var requestLocation = CLLocation()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
+        setupLocation()
+//        UserDefaults.standard.set(false, forKey: "didYouRegister")
+        //Register
         let register = UserDefaults.standard.bool(forKey: "didYouRegister")
         if !register{
             didYouRegisterBefore()
         }
+        else{
+            let id = UserDefaults.standard.string(forKey: "userId")
+            if let _id = id{
+                Users.getUser(id: _id)
+            }
+        }
         
+        //Begin App
         window = UIWindow()
 
 //        window?.rootViewController = PostsController(collectionViewLayout: UICollectionViewFlowLayout())
@@ -29,11 +42,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         
         return true
     }
+    //User Register
     func didYouRegisterBefore() {
+        let userid = NSUUID().uuidString
         let deviceId = UIDevice.current.identifierForVendor?.uuidString
-        Users.userRegister(device: deviceId!)
+      
+        Users.userRegister(userid: userid,device: deviceId!)
         UserDefaults.standard.set(true, forKey: "didYouRegister")
+        UserDefaults.standard.set(userid, forKey: "userId")
     }
+    
+    //Location
+    fileprivate func setupLocation() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let lat = locations[0].coordinate.latitude.description
+        let lon = locations[0].coordinate.longitude.description
+        var city = String()
+        var country = String()
+        
+        UserDefaults.standard.set(lat, forKey: "lat")
+        UserDefaults.standard.set(lon, forKey: "lon")
+        let location = CLLocationCoordinate2D(latitude: locations[0].coordinate.latitude , longitude: locations[0].coordinate.longitude)
+        
+        requestLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
+        
+        CLGeocoder().reverseGeocodeLocation(requestLocation) { (placemarks, error) in
+            if let placemark = placemarks{
+                if placemark.count > 0 {
+                    city = placemark[0].subAdministrativeArea!
+                    country = placemark[0].country!
+                    UserDefaults.standard.set(city, forKey: "city")
+                    UserDefaults.standard.set(country, forKey: "country")
+//                    self.city = (placemark[0].subAdministrativeArea)!
+//                    self.country = placemark[0].country!
+                    print("icerde")
+                }
+            }
+        }
+    }
+    
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

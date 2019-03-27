@@ -83,7 +83,7 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
         if !commentTextView.text.isEmpty{
             if let comment = commentTextView.text{
                 print(comment)
-                Post.commentDownloadNPost(text: comment, id: camePostId, comment: true, rate: false)
+                Post.commentDownloadNPost(text: comment, id: camePostId, comment: true, rate: false, view: false)
                 //MARK burada comment yollanacak
             }
         }
@@ -99,6 +99,8 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
                             self.comments?.append(text)
                         }
                     }
+                }
+                if let _ = results[index].content{
                     self.upLabel = (results[index].content?.like)!
                     self.downLabel = (results[index].content?.dislike)!
                 }

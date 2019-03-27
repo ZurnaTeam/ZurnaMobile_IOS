@@ -13,10 +13,7 @@ public var sendedPost = "Sample Text"
 public var sendedIndexPath: Int = -1
 public var postId = ""
 
-class PostsController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate {
-    
-    //Structures
-    
+class PostsController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     //Properties
 
@@ -27,9 +24,7 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
     fileprivate let headerId = "headerId"
     fileprivate let padding: CGFloat = 16
     
-    var mark = ""
-    var locationManager = CLLocationManager()
-    var requestLocation = CLLocation()
+
     var hashImageConstraitY: NSLayoutConstraint?
     var hashImageConstraitX: NSLayoutConstraint?
     var hashMenuBarConstrait: NSLayoutConstraint?
@@ -57,8 +52,6 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         super.init(collectionViewLayout:layout)
         let model = UIDevice.current.identifierForVendor?.uuidString
         print("Device ID: \(model!)")
-        setupLocation()
-//        print(locationManager.location.)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -83,7 +76,6 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         setupCollectionViewLayout()
         setupCollectionView()
         setupHashMenu()
-        
         let hashMenuOpen = UISwipeGestureRecognizer(target: self, action: #selector(toggleMenuBar(sender:)))
         let hashMenuClose = UISwipeGestureRecognizer(target: self, action: #selector(toggleMenuBar(sender:)))
         hashMenuClose.direction = .left
@@ -128,36 +120,8 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
 
         
     }
-    fileprivate func setupLocation() {
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
-    }
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = CLLocationCoordinate2D(latitude: locations[0].coordinate.latitude, longitude: locations[0].coordinate.longitude)
-        
-        requestLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
-        
-        CLGeocoder().reverseGeocodeLocation(requestLocation) { (placemarks, error) in
-            if let placemark = placemarks{
-                if placemark.count > 0 {
-                    //print(location)
-                    //print(placemark[0].administrativeArea)
-                    //self.postTxt.text = placemark[0].administrativeArea
-                    self.mark = (placemark[0].administrativeArea)!
-                    print("Location icinde \(self.mark)")
-                    //print("-----------")
-                    //print(placemark[0].isoCountryCode)
-                }
-            }
-        }
-    }
+    //Bir kisi birden fazla oylama kez oy verebiliyor. Boyle bir sey olmasin
     //Guncelleme olacak
-    //Gonder butonu calisacak
-    //Up-Down butonu calisacak
-    //Yorum gonder butonu calisacak
-    //Post kismindaki klavye kapatilacak
     //MARK Hashtagler gelecek
     //MARK Internet var mi kontrolu yapilacak
     //MARK Setting eklenebilir
@@ -199,6 +163,7 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         
         collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
     }
+
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath)
@@ -255,9 +220,11 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         let cell = collectionView.cellForItem(at: indexPath) as! PostsViewCell
         self.view.endEditing(true)
         
+        
         sendedPost = cell.postTextView.text!
         sendedIndexPath = indexPath.item
         postId = postsIds![indexPath.item]
+        Post.commentDownloadNPost(text: "", id: postId, comment: false, rate: false, view: true)
         
         navigationController?.pushViewController(CommentController(collectionViewLayout: UICollectionViewFlowLayout()), animated: true)
     }

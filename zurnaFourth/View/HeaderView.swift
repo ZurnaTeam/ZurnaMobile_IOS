@@ -7,8 +7,17 @@
 //
 
 import UIKit
+import CoreLocation
 
-class HeaderView: UICollectionReusableView {
+class HeaderView: UICollectionReusableView, CLLocationManagerDelegate  {
+    var mark = ""
+    var locationManager = CLLocationManager()
+    var requestLocation = CLLocation()
+    var lat = String()
+    var lon = String()
+    var country = ""
+    var city = ""
+    
     let postTextView: UITextView = {
         let textView = UITextView()
         textView.backgroundColor = .white
@@ -36,6 +45,7 @@ class HeaderView: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame:frame)
+        setupLocation()
 //        backgroundColor = UIColor(red:0.94, green:0.78, blue:0.76, alpha:1.0)
         backgroundColor = UIColor(white: 0.95, alpha: 1)
         
@@ -60,10 +70,34 @@ class HeaderView: UICollectionReusableView {
         if !postTextView.text.isEmpty {
             if let post = postTextView.text{
                 print(post)
-                Post.postStruct(text: post)
+                Post.postStruct(text: post, lat: lat, lon: lon, country: country, city: city)
             }
         }
         
+    }
+    //Location
+    fileprivate func setupLocation() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.lat = locations[0].coordinate.latitude.description
+        self.lon = locations[0].coordinate.longitude.description
+        let location = CLLocationCoordinate2D(latitude: locations[0].coordinate.latitude , longitude: locations[0].coordinate.longitude)
+        
+        requestLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
+        
+        CLGeocoder().reverseGeocodeLocation(requestLocation) { (placemarks, error) in
+            if let placemark = placemarks{
+                if placemark.count > 0 {
+                    self.city = (placemark[0].subAdministrativeArea)!
+                    self.country = placemark[0].country!
+                }
+            }
+        }
     }
     
 }

@@ -13,6 +13,7 @@
 		D719902D2248B3A4003C97A5 /* Structs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D719902C2248B3A4003C97A5 /* Structs.swift */; };
 		D7280DFA2239942400E4D66E /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7280DF92239942400E4D66E /* CustomTabBarController.swift */; };
 		D7280DFC2239966E00E4D66E /* GezginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7280DFB2239966E00E4D66E /* GezginController.swift */; };
+		D72848D4224A5E070075D7FF /* UtilClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72848D3224A5E070075D7FF /* UtilClasses.swift */; };
 		D72F4771223F759E00AD176F /* CommentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72F4770223F759E00AD176F /* CommentHeaderView.swift */; };
 		D72F4773223FDA7C00AD176F /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72F4772223FDA7C00AD176F /* Protocols.swift */; };
 		D72F4775223FDD9500AD176F /* CommentViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72F4774223FDD9500AD176F /* CommentViewCell.swift */; };
@@ -38,6 +39,7 @@
 		D719902C2248B3A4003C97A5 /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
 		D7280DF92239942400E4D66E /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		D7280DFB2239966E00E4D66E /* GezginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GezginController.swift; sourceTree = "<group>"; };
+		D72848D3224A5E070075D7FF /* UtilClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilClasses.swift; sourceTree = "<group>"; };
 		D72F4770223F759E00AD176F /* CommentHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentHeaderView.swift; sourceTree = "<group>"; };
 		D72F4772223FDA7C00AD176F /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		D72F4774223FDD9500AD176F /* CommentViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewCell.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				D7C2381122391B7D0022E4A0 /* ExtensionForUIView.swift */,
 				D72F4772223FDA7C00AD176F /* Protocols.swift */,
 				D719902C2248B3A4003C97A5 /* Structs.swift */,
+				D72848D3224A5E070075D7FF /* UtilClasses.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -218,6 +221,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D72848D4224A5E070075D7FF /* UtilClasses.swift in Sources */,
 				D719902D2248B3A4003C97A5 /* Structs.swift in Sources */,
 				D7C237FE2238F2370022E4A0 /* ViewController.swift in Sources */,
 				D7C9B875223A32E80029DCE7 /* CommentController.swift in Sources */,
