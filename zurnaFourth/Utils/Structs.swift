@@ -440,5 +440,34 @@ struct Users: Codable {
         task.suspend()
     }
 }
+struct HashTag: Codable {
+    //Hashtag
+    //Get Hashtag
+    static func getHashTag (completion: @escaping ([String]) -> ()){
+        let url = "http://77.223.142.42/plesk-site-preview/azorlua.com/api/hashtags/getpopulartags"
+        let request = URLRequest(url: URL(string: url)!)
+        
+        let task = URLSession.shared.dataTask(with: request) { (data:Data?, response:URLResponse?, error:Error?) in
+            
+            guard error == nil else {
+                print ("error: \(error!)")
+                return
+            }
+            
+            guard let data = data else {
+                print("No data")
+                return
+            }
+            
+            guard let hashtags = try? JSONDecoder().decode([String].self, from: data) else {
+                print("Error: Couldn't decode data into post")
+                return
+            }
+            completion(hashtags)
+        }
+        task.resume()
+        task.suspend()
+    }
+}
 
 

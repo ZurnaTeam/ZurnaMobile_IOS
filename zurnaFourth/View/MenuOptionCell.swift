@@ -11,10 +11,11 @@ import UIKit
 class MenuOptionCell: UITableViewCell {
     
     //MARK: - Properties
+    
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.backgroundColor = .white
-        label.textColor = .white
+        label.backgroundColor = UIColor(red:0.94, green:0.78, blue:0.76, alpha:1.0)
+        label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 16)
         label.text = "#sampleText"
         return label
@@ -26,10 +27,11 @@ class MenuOptionCell: UITableViewCell {
         backgroundColor = .red
         
         addSubview(descriptionLabel)
-        
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        descriptionLabel.leftAnchor.constraint(equalTo: leftAnchor,constant: 12).isActive = true
+        addConstraintsWithFormat(format: "H:|[v0]|", views: descriptionLabel)
+        addConstraintsWithFormat(format: "V:|[v0]|", views: descriptionLabel)
+//        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+//        descriptionLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+//        descriptionLabel.leftAnchor.constraint(equalTo: leftAnchor,constant: 12).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -37,5 +39,4 @@ class MenuOptionCell: UITableViewCell {
     }
     
     //MARK: - Handlers
-    
 }

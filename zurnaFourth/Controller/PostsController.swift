@@ -23,7 +23,6 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
     fileprivate let cellId = "cellId"
     fileprivate let headerId = "headerId"
     fileprivate let padding: CGFloat = 16
-    
 
     var hashImageConstraitY: NSLayoutConstraint?
     var hashImageConstraitX: NSLayoutConstraint?
@@ -66,12 +65,29 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
                         self.postsIds?.append(result.id!)
                     }
                     self.collectionView.reloadData()
+                    
                 }
             }
         }
-       
     }
-    
+    public func getPostsFromAPIForHashtag(hashtag: String) {
+        posts?.removeAll()
+        postsIds?.removeAll()
+        Post.downloadStruct { (results:[Post]) in
+            DispatchQueue.main.async {
+                for result in results{
+                    if let text = result.content?.text{
+                        if hashtag == result.content?.hashtag{
+                            self.posts?.append(text)
+                            self.postsIds?.append(result.id!)
+                        }
+                    }
+                }
+                self.collectionView.reloadData()
+            }
+        }
+    }
+
     override func viewDidLoad() {
         setupCollectionViewLayout()
         setupCollectionView()
@@ -84,6 +100,17 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         hashImage.addGestureRecognizer(hashMenuClose)
         
         getPostsFromAPI()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveMessage(_:)), name: Notification.Name("didReceiveMessage"), object: nil)
+    }
+    @objc func didReceiveMessage(_ notification:Notification){
+        if let hashtag = notification.userInfo?["hashtag"]{
+            //let hashtag = _hashtag["hashtag"]
+            print("\(hashtag)")
+            getPostsFromAPIForHashtag(hashtag: hashtag as! String)
+        }
+        print("we got messages")
+        
     }
     
     @objc func toggleMenuBar(sender: UISwipeGestureRecognizer){
@@ -109,20 +136,36 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         hashImageConstraitX = NSLayoutConstraint(item: hashImage, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: 0)
         view.addConstraint(hashImageConstraitY!)
         view.addConstraint(hashImageConstraitX!)
-        
-        view.addSubview(menuControllerView)
-        menuControllerView.layer.shadowOpacity = 1
-        menuControllerView.layer.shadowRadius = 5
-        view.addConstraintsWithFormat(format: "H:|[v0(150)]", views: menuControllerView)
-        view.addConstraintsWithFormat(format: "V:|[v0]|", views: menuControllerView)
-        hashMenuBarConstrait = NSLayoutConstraint(item: menuControllerView, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: -155)//SıkıntılıLayout constanti 0 yapmak lazim ancak o zamanda ekranda surekli kaliyor
-        view.addConstraint(hashMenuBarConstrait!)
+
+        var menuController : MenuController!
+        if menuController == nil {
+            menuController = MenuController()
+            
+            view.addSubview(menuController.view)
+            addChild(menuController)
+//            menuController.didMove(toParent: self)
+            
+            menuController.view.layer.shadowOpacity = 1
+            menuController.view.layer.shadowRadius = 5
+            view.addConstraintsWithFormat(format: "H:|[v0(150)]", views: menuController.view)
+            view.addConstraintsWithFormat(format: "V:|[v0]|", views: menuController.view)
+            hashMenuBarConstrait = NSLayoutConstraint(item: menuController.view, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: -155)//SıkıntılıLayout constanti 0 yapmak lazim ancak o zamanda ekranda surekli kaliyor
+            view.addConstraint(hashMenuBarConstrait!)
+
+        }
+//        view.addSubview(menuControllerView)
+//        menuControllerView.layer.shadowOpacity = 1
+//        menuControllerView.layer.shadowRadius = 5
+//        view.addConstraintsWithFormat(format: "H:|[v0(150)]", views: menuControllerView)
+//        view.addConstraintsWithFormat(format: "V:|[v0]|", views: menuControllerView)
+//        hashMenuBarConstrait = NSLayoutConstraint(item: menuControllerView, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: -155)//SıkıntılıLayout constanti 0 yapmak lazim ancak o zamanda ekranda surekli kaliyor
+//        view.addConstraint(hashMenuBarConstrait!)
 
         
     }
+    //Post atildiktan sonra textview sifirlansin ayni sekilde commentview de
     //Bir kisi birden fazla oylama kez oy verebiliyor. Boyle bir sey olmasin
     //Guncelleme olacak
-    //MARK Hashtagler gelecek
     //MARK Internet var mi kontrolu yapilacak
     //MARK Setting eklenebilir
     //MARK 1.Filtreleme olacak
@@ -219,8 +262,7 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! PostsViewCell
         self.view.endEditing(true)
-        
-        
+
         sendedPost = cell.postTextView.text!
         sendedIndexPath = indexPath.item
         postId = postsIds![indexPath.item]
@@ -232,3 +274,5 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         self.view.endEditing(true)
     }
 }
+
+
