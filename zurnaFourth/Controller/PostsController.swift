@@ -12,13 +12,17 @@ import CoreLocation
 public var sendedPost = "Sample Text"
 public var sendedIndexPath: Int = -1
 public var postId = ""
+public var postTimer: Timer?
 
-class PostsController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class PostsController: UICollectionViewController, UICollectionViewDelegateFlowLayout{
     
     //Properties
 
+    var city = String()
+    
     var posts: [String]? = [String]()
     var postsIds: [String]? = [String]()
+    var hashtag: String = String()
     
     fileprivate let cellId = "cellId"
     fileprivate let headerId = "headerId"
@@ -64,13 +68,13 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
                         self.posts?.append(text)
                         self.postsIds?.append(result.id!)
                     }
-                    self.collectionView.reloadData()
-                    
                 }
+                self.collectionView.reloadData()
             }
         }
     }
     public func getPostsFromAPIForHashtag(hashtag: String) {
+        print("getPostsFromApiWithoutHashtag")
         posts?.removeAll()
         postsIds?.removeAll()
         Post.downloadStruct { (results:[Post]) in
@@ -100,17 +104,67 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
         hashImage.addGestureRecognizer(hashMenuClose)
         
         getPostsFromAPI()
+        NotificationCenter.default.addObserver(self, selector: #selector(didCitySelected(_:)), name: Notification.Name("didCitySelected"), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveMessage(_:)), name: Notification.Name("didReceiveMessage"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didSelectHashtag(_:)), name: Notification.Name("didSelectHashtag"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(getPostWithoutHashtag), name: Notification.Name("didClearHashtag"), object: nil)
+        
+        postTimer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(updateMessages), userInfo: nil, repeats: true)
+        
     }
-    @objc func didReceiveMessage(_ notification:Notification){
+    @objc func updateMessages(){
+        if city.isEmpty{
+            getPostWithoutHashtag()
+        }
+    }
+
+    @objc func didCitySelected(_ notification:Notification){
+        if let city = notification.userInfo?["city"]{
+            //let hashtag = _hashtag["hashtag"]
+            self.city = city as! String
+            print("PostController \(city)")
+            getCityPostsFromAPI(city: city as! String)
+        }
+    }
+    fileprivate func getCityPostsFromAPI(city: String) {
+        posts?.removeAll()
+        postsIds?.removeAll()
+        Post.downloadStruct { (results:[Post]) in
+            DispatchQueue.main.async {
+                
+                for result in results{
+                    if city == result.content?.location?.city{
+                        if let text = result.content?.text{
+                            self.posts?.append(text)
+                            self.postsIds?.append(result.id!)
+                        }
+                    }
+                    
+                }
+                self.collectionView.reloadData()
+                self.collectionView.collectionViewLayout.invalidateLayout()
+                
+            }
+        }
+    }
+    
+    @objc func didSelectHashtag(_ notification:Notification){
         if let hashtag = notification.userInfo?["hashtag"]{
             //let hashtag = _hashtag["hashtag"]
+            self.hashtag = hashtag as! String
             print("\(hashtag)")
             getPostsFromAPIForHashtag(hashtag: hashtag as! String)
         }
         print("we got messages")
-        
+    }
+    
+    @objc func getPostWithoutHashtag(){
+        self.hashtag = ""
+        print("getPostWithoutHashtag")
+        posts?.removeAll()
+        postsIds?.removeAll()
+        getPostsFromAPI()
     }
     
     @objc func toggleMenuBar(sender: UISwipeGestureRecognizer){
@@ -163,6 +217,8 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
 
         
     }
+    //Yazarken timer dursun
+    //Hashtag yakalama yapilacak
     //Post atildiktan sonra textview sifirlansin ayni sekilde commentview de
     //Bir kisi birden fazla oylama kez oy verebiliyor. Boyle bir sey olmasin
     //Guncelleme olacak
@@ -170,7 +226,6 @@ class PostsController: UICollectionViewController, UICollectionViewDelegateFlowL
     //MARK Setting eklenebilir
     //MARK 1.Filtreleme olacak
     //MARK 1.1 Gezgin filtresi olacak secilen sehrin postlari gelecek
-    //MARK 1.2 Hashtag filtresi olacak secilen hashtag postlari gelecek
     
 //    MARK Hata olmayan uyarilar giderilecek
         func openMenu(){

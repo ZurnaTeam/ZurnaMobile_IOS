@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     var requestLocation = CLLocation()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
         // Override point for customization after application launch.
         setupLocation()
 //        UserDefaults.standard.set(false, forKey: "didYouRegister")
@@ -39,9 +40,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 
 //        window?.rootViewController = PostsController(collectionViewLayout: UICollectionViewFlowLayout())
         window?.rootViewController = CustomTabBarController()
+//        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
         
         return true
     }
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        
+    }
+//    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+//        if let tabbarController = window?.rootViewController as? CustomTabBarController{
+//            if let postController = tabbarController.navigationController?.viewControllers.first as? PostsController{
+//                print("itsWorking")
+//            }
+//        }
+//
+//    }
     //User Register
     func didYouRegisterBefore() {
         let userid = NSUUID().uuidString

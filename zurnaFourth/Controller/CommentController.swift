@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CommentController: UICollectionViewController, UICollectionViewDelegateFlowLayout{
+class CommentController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UITextViewDelegate{
  
     private var camePost = sendedPost
     private var cameIndexPath: Int = sendedIndexPath
@@ -27,21 +27,25 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
     //Comment Send
     let commentPostContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = UIColor(white: 0.95, alpha: 1)
         return view
     }()
     let commentTextView: UITextView = {
         let textView = UITextView()
-        textView.backgroundColor = .red
-        //            textView.text = "deneme"
+        textView.backgroundColor = .white
+        textView.textColor = .lightGray
+        textView.text = "Yorum yazın."
+        textView.returnKeyType = .done
+        textView.layer.borderWidth = 0.5
         textView.isUserInteractionEnabled = true
-        textView.layer.cornerRadius = 15
+        textView.layer.cornerRadius = 20
         return textView
     }()
     let commentSendButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .blue
+        button.backgroundColor = UIColor(white: 0.95, alpha: 1)
         button.setTitle("Send", for: UIControl.State.normal)
+        button.setTitleColor(.black, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.addTarget(self, action: #selector(commentSendButtonAction), for: .touchUpInside)
         return button
@@ -75,6 +79,25 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if commentTextView.text == "Yorum yazın."{
+            textView.text = ""
+            textView.textColor = .black
+        }
+    }
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n"{
+            textView.resignFirstResponder()
+        }
+        return true
+    }
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if commentTextView.text == ""{
+            commentTextView.text = "Yorum yazın."
+            commentTextView.textColor = .lightGray
+            
+        }
+    }
     
     @objc func commentSendButtonAction(sender: UIButton!) {
         //Comment send butonu islemleri
@@ -84,6 +107,8 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
             if let comment = commentTextView.text{
                 print(comment)
                 Post.commentDownloadNPost(text: comment, id: camePostId, comment: true, rate: false, view: false)
+                commentTextView.text = ""
+                commentTextView.endEditing(true)
                 //MARK burada comment yollanacak
             }
         }
@@ -133,8 +158,9 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
         
         commentPostContainerView.addSubview(commentTextView)
         commentPostContainerView.addSubview(commentSendButton)
+        commentTextView.delegate = self
         commentPostContainerView.addSubview(topBorderView)
-        commentPostContainerView.addConstraintsWithFormat(format: "H:|-5-[v0][v1]|", views: commentTextView,commentSendButton)
+        commentPostContainerView.addConstraintsWithFormat(format: "H:|[v0]-1-[v1]|", views: commentTextView,commentSendButton)
         commentPostContainerView.addConstraintsWithFormat(format: "V:[v0(40)]|", views: commentTextView)
         commentPostContainerView.addConstraintsWithFormat(format: "V:[v0(40)]|", views: commentSendButton)
         
@@ -151,7 +177,7 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
     fileprivate func setupCollectionView() {
-        collectionView.backgroundColor = .yellow
+        collectionView.backgroundColor = .white
         collectionView.contentInsetAdjustmentBehavior = .always
         
         collectionView.register(CommentViewCell.self, forCellWithReuseIdentifier: cellId)
@@ -171,7 +197,7 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return .init(width: view.frame.width, height: 70)
+        return .init(width: view.frame.width, height: 80)
     }
     
     //Collection
@@ -186,11 +212,11 @@ class CommentController: UICollectionViewController, UICollectionViewDelegateFlo
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! CommentViewCell
         
-        cell.backgroundColor = .black
+        cell.backgroundColor = .clear
         cell.frame.offsetBy(dx: 0, dy: 0)
         if let commentContent = comments?[indexPath.row]{
             cell.commentTextField.text = commentContent
-            cell.commentTextField.textColor = .white
+            cell.commentTextField.textColor = .black
         }
         return cell
     }

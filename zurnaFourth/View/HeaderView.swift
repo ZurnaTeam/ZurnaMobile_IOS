@@ -9,7 +9,8 @@
 import UIKit
 import CoreLocation
 
-class HeaderView: UICollectionReusableView, CLLocationManagerDelegate  {
+class HeaderView: UICollectionReusableView, CLLocationManagerDelegate, UITextViewDelegate  {
+    
     var mark = ""
     var locationManager = CLLocationManager()
     var requestLocation = CLLocation()
@@ -21,6 +22,9 @@ class HeaderView: UICollectionReusableView, CLLocationManagerDelegate  {
     let postTextView: UITextView = {
         let textView = UITextView()
         textView.backgroundColor = .white
+        textView.text = "Gönderi yazın."
+        textView.returnKeyType = .done
+        textView.textColor = UIColor.lightGray
         textView.font = UIFont.systemFont(ofSize: 15)
         textView.layer.borderWidth = 2
         textView.layer.borderColor = UIColor.black.cgColor
@@ -31,6 +35,7 @@ class HeaderView: UICollectionReusableView, CLLocationManagerDelegate  {
 
         return textView
     }()
+
     
     let sendButton: UIButton = {
         let button = UIButton()
@@ -51,6 +56,7 @@ class HeaderView: UICollectionReusableView, CLLocationManagerDelegate  {
         
         addSubview(postTextView)
         addSubview(sendButton)
+        postTextView.delegate = self
         
         let centerY = frame.height/4
         
@@ -63,6 +69,31 @@ class HeaderView: UICollectionReusableView, CLLocationManagerDelegate  {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if postTextView.text == "Gönderi yazın."{
+            textView.text = ""
+            textView.textColor = .black
+        }
+        postTimer?.invalidate()
+    }
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n"{
+            textView.resignFirstResponder()
+        }
+        return true
+    }
+    func textViewDidEndEditing(_ textView: UITextView) {
+        
+        if postTextView.text == ""{
+            postTextView.text = "Gönderi yazın."
+            postTextView.textColor = .lightGray
+            
+            
+//            postTimer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(PostsController.getPostWithoutHashtag), userInfo: nil, repeats: true)
+        }
+
+    }
 
     @objc func buttonAction(sender: UIButton!) {
         //Gonder butonu islemleri
@@ -71,6 +102,8 @@ class HeaderView: UICollectionReusableView, CLLocationManagerDelegate  {
             if let post = postTextView.text{
                 print(post)
                 Post.postStruct(text: post, lat: lat, lon: lon, country: country, city: city)
+                postTextView.text=""
+                postTextView.endEditing(true)
             }
         }
         

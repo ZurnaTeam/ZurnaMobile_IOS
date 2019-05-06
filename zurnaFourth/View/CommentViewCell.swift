@@ -19,7 +19,7 @@ class CommentViewCell: BaseCell {
     }()
     let textBubbleView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        view.backgroundColor = UIColor(red:1.00, green:0.90, blue:0.83, alpha:1.0)
         view.layer.cornerRadius = 15
         view.layer.masksToBounds = true
         return view
@@ -28,8 +28,12 @@ class CommentViewCell: BaseCell {
         super.setupViews()
         addSubview(textBubbleView)
         addSubview(commentTextField)
+        
+        addConstraintsWithFormat(format: "H:|[v0]|", views: textBubbleView)
+        addConstraintsWithFormat(format: "V:|[v0]|", views: textBubbleView)
         addConstraintsWithFormat(format: "H:|-5-[v0]|", views: commentTextField)
         addConstraintsWithFormat(format: "V:|[v0]|", views: commentTextField)
+        
     }
     
 }

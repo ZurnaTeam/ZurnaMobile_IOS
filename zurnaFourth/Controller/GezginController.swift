@@ -104,6 +104,26 @@ class GezginController: UICollectionViewController{
         let cell = collectionView.cellForItem(at: indexPath) as! GezginViewCell
         if let country = cell.countryLabel.text?.split(separator: " "){
             print(country[1])
+            
+            
+            //navigationController?.popToViewController(self, animated: false)
+//            self.navigationController?.popViewController(animated: true)
+//            self.navigationController?.popToRootViewController(animated: true)
+            
+            
+//            self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+//            self.navigationController?.dismiss(animated: true, completion: nil)
+            
+            self.present(CustomTabBarController(), animated: true, completion: nil)
+            
+            var dic: Dictionary<String, String> = Dictionary()
+            dic.updateValue(String(country[1]), forKey: "city")
+            NotificationCenter.default.post(name: Notification.Name("didCitySelected"), object: nil, userInfo: dic)
+            
+            
+//            navigationController?.popToViewController(self, animated: true)
+//            navigationController?.pushViewController(a!, animated: true)
+            
 
             //            navigationController?.popToViewController(CommentController(collectionViewLayout: UICollectionViewLayout()), animated: true)
         }

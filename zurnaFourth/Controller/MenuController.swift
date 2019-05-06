@@ -15,6 +15,9 @@ class MenuController: UITableViewController{
 //    var tableView: UITableView!
     var hashtags: [String]? = [String]()
     var hashtagsIds: [String]? = [String]()
+    var selected: [Int:Bool]? = [Int:Bool]()
+    var selectedIndex: [Int]? = [Int]()
+    var selectedRowBool: [Bool]? = [Bool]()
     
     //MARK: - Init
     override func viewDidLoad() {
@@ -52,9 +55,10 @@ class MenuController: UITableViewController{
                         self.hashtags?.append(result)
 //                        self.postsIds?.append(result.id!)
                     }
-                    self.tableView.reloadData()
                 }
+                 self.tableView.reloadData()
             }
+           
         }
     }
     
@@ -71,6 +75,8 @@ class MenuController: UITableViewController{
         
         if let hashtag = hashtags?[indexPath.item]{
             cell.descriptionLabel.text = hashtag
+            selectedIndex?.append(indexPath.item)
+            selectedRowBool?.append(false)
         }
         
         return cell
@@ -81,25 +87,43 @@ class MenuController: UITableViewController{
         if let hashtag = hashtags?[indexPath.item]{
 //            let postController = PostsController(collectionViewLayout: UICollectionViewFlowLayout())
 //            postController.getPostsFromAPIForHashtag(hashtag: hashtag)
-
-            var dic: Dictionary<String, String> = Dictionary()
-            dic.updateValue(hashtag as String, forKey: "hashtag")
-            NotificationCenter.default.post(name: Notification.Name("didReceiveMessage"), object: nil, userInfo: dic)
-        }
-        if let cell = tableView.cellForRow(at: indexPath){
-            cell.accessoryType = .checkmark
+            
+            
+            if let index = selectedIndex?[indexPath.item]{
+                if !selectedRowBool![index]{
+                    print(index)
+                    selectedRowBool![index] = true
+                    
+                    var dic: Dictionary<String, String> = Dictionary()
+                    dic.updateValue(hashtag as String, forKey: "hashtag")
+                    NotificationCenter.default.post(name: Notification.Name("didSelectHashtag"), object: nil, userInfo: dic)
+                    
+                    if let cell = self.tableView.cellForRow(at: indexPath){
+                        
+                        cell.accessoryType = .checkmark
+                    }
+                }
+                else{
+                    selectedRowBool![index] = false
+                    NotificationCenter.default.post(name: Notification.Name("didClearHashtag"), object: nil, userInfo: nil)
+                    if let cell = self.tableView.cellForRow(at: indexPath){
+                        cell.accessoryType = .none
+                    }
+                }
+                
+            }
+            
+            
         }
         
+        
     }
-    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: indexPath) {
-            cell.accessoryType = .none
-        }
-    }
-
+//    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+//        if let cell = tableView.cellForRow(at: indexPath) {
+//            cell.accessoryType = .none
+//        }
+//    }
     
-    
-
 }
 //extension MenuController: UITableViewDelegate, UITableViewDataSource{
 //    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -31,17 +31,19 @@ class CommentHeaderView: UICollectionReusableView {
     
     let upButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .blue
-        button.setTitle("Up", for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 10)
+        button.backgroundColor = .clear
+        button.setImage(UIImage(named: "upBtnImg"), for: UIControl.State.normal)
+//        button.setTitle("Up", for: UIControl.State.normal)
+//        button.titleLabel?.font = UIFont.systemFont(ofSize: 10)
         button.addTarget(self, action: #selector(upButtonAction), for: .touchUpInside)
         return button
     }()
     let downButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .red
-        button.setTitle("Down", for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 10)
+        button.backgroundColor = .clear
+        button.setImage(UIImage(named: "downBtnImg"), for: UIControl.State.normal)
+//        button.setTitle("Down", for: UIControl.State.normal)
+//        button.titleLabel?.font = UIFont.systemFont(ofSize: 10)
         button.addTarget(self, action: #selector(downButtonAction), for: .touchUpInside)
         return button
     }()
@@ -60,7 +62,8 @@ class CommentHeaderView: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame:frame)
-        backgroundColor = .yellow
+        backgroundColor = .clear
+        
         
         addSubview(postTextView)
         addSubview(rateView)
@@ -79,7 +82,8 @@ class CommentHeaderView: UICollectionReusableView {
         addConstraintsWithFormat(format: "H:[v0]|", views: upLabel)
         addConstraintsWithFormat(format: "H:[v0]|", views: downLabel)
         
-        addConstraintsWithFormat(format: "V:|-\(rateCenterY)-[v0][v1][v2][v3]-\(rateCenterY)-|", views: upLabel, upButton, downButton, downLabel)
+//        addConstraintsWithFormat(format: "V:|-\(rateCenterY)-[v0][v1][v2][v3]-\(rateCenterY)-|", views: upLabel, upButton, downButton, downLabel)
+        addConstraintsWithFormat(format: "V:|[v0][v1][v2][v3]|", views: upLabel, upButton, downButton, downLabel)
         
     }
     
